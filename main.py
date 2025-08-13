@@ -59,6 +59,6 @@ if __name__ == "__main__":
             notification()
 
         if today.month == 11 and today.day == 15:
-            notification()
+            set_default_periods()
 
         sleep_until_12_msk()
