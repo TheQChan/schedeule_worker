@@ -1,5 +1,8 @@
-from datetime import date, datetime, timedelta, UTC
+from datetime import datetime, date, timedelta
 from time import sleep
+from pytz import timezone
+
+MSK = timezone('Europe/Moscow')
 
 employees = [
     {"id": 1, "name": "Иванов Иван", "status": None, "periods": None},
@@ -31,34 +34,19 @@ def set_default_periods():
     print("График закрыт")
 
 
-def sleep_until_12_msk():
-    now = datetime.now(UTC) + timedelta(hours=3)
-
-    if now.hour >= 12:
-        target = now.replace(hour=12, minute=0, second=0, microsecond=0) + timedelta(
-            days=1
-        )
-    else:
-        target = now.replace(hour=12, minute=0, second=0, microsecond=0)
-
-    sleep_seconds = (target - now).total_seconds()
-    print(
-        f"Спим до {target.strftime('%d.%m.%Y %H:%M')} по МСК ({sleep_seconds:.1f} секунд)"
-    )
-    sleep(sleep_seconds)
-
-
 if __name__ == "__main__":
 
     while True:
-        today = date.today()
-        if today.month == 11 and today.day == 1:
+        now = datetime.now(MSK)
+        today = now.date()
+        current_time = now.time()
+        
+        if today.month == 11 and today.day == 1 and current_time.hour == 12 and current_time.minute == 0:
             create_periods()
-
-        if today.month == 11 and today.day == 8:
+        
+        if today.month == 11 and today.day == 8 and current_time.hour == 12 and current_time.minute == 0:
             notification()
-
-        if today.month == 11 and today.day == 15:
+        
+        if today.month == 11 and today.day == 15 and current_time.hour == 12 and current_time.minute == 0:
             set_default_periods()
-
-        sleep_until_12_msk()
+        sleep(60)
